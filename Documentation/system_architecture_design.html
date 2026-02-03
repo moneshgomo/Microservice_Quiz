@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture Design - User Service Integration</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-panel: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #22c55e;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --border: rgba(56, 189, 248, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0b1121;
+            color: var(--text-main);
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .canvas {
+            position: relative;
+            width: 1200px;
+            height: 800px;
+            background: radial-gradient(circle at center, #1e293b 0%, #0b1121 100%);
+            padding: 40px;
+        }
+
+        /* Large Kubernetes Boundary */
+        .cluster-boundary {
+            position: absolute;
+            top: 150px;
+            left: 280px;
+            width: 580px;
+            height: 520px;
+            border: 2px solid var(--accent-blue);
+            border-radius: 16px;
+            background: rgba(56, 189, 248, 0.03);
+            z-index: 1;
+        }
+
+        .cluster-label {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Node Styles to match reference image */
+        .node {
+            position: absolute;
+            background: #1e293b;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .node.purple {
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+
+        .node.green {
+            border-color: rgba(34, 197, 94, 0.4);
+        }
+
+        .node-label {
+            font-size: 14px;
+            font-weight: 400;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .node-tag {
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: #0f172a;
+            font-size: 8px;
+            padding: 2px 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            color: var(--text-dim);
+        }
+
+        /* Stack Positioning */
+        .github-actions {
+            left: 40px;
+            top: 320px;
+            width: 100px;
+            height: 140px;
+        }
+
+        .docker-stack {
+            left: 180px;
+            top: 320px;
+            width: 80px;
+            height: 140px;
+        }
+
+        .rabbitmq {
+            left: 340px;
+            top: 340px;
+            width: 110px;
+        }
+
+        .mysql {
+            left: 340px;
+            top: 480px;
+            width: 110px;
+            height: 110px;
+            border-radius: 50% 50% 12px 12px;
+        }
+
+        .service-auth {
+            left: 520px;
+            top: 190px;
+            width: 140px;
+        }
+
+        .service-user {
+            left: 520px;
+            top: 300px;
+            width: 140px;
+            border: 2px solid var(--accent-blue);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+        }
+
+        .service-quiz {
+            left: 520px;
+            top: 410px;
+            width: 140px;
+        }
+
+        .service-question {
+            left: 520px;
+            top: 520px;
+            width: 140px;
+        }
+
+        .frontend {
+            left: 900px;
+            top: 180px;
+            width: 220px;
+            height: 150px;
+            border-color: var(--accent-green);
+        }
+
+        .gateway {
+            left: 900px;
+            top: 400px;
+            width: 220px;
+            height: 80px;
+            border-color: var(--accent-green);
+        }
+
+        /* Icons */
+        .icon {
+            width: 32px;
+            height: 32px;
+            stroke-width: 1.5;
+        }
+
+        .icon.blue {
+            color: var(--accent-blue);
+        }
+
+        .icon.purple {
+            color: var(--accent-purple);
+        }
+
+        .icon.green {
+            color: var(--accent-green);
+        }
+
+        /* Lines (CSS Paths) */
+        .path {
+            position: absolute;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        svg.lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        line,
+        path {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.15);
+            stroke-width: 2;
+        }
+
+        .highlight-line {
+            stroke: var(--accent-blue);
+            stroke-opacity: 0.6;
+            stroke-dasharray: 4;
+        }
+
+        .legend {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            font-size: 10px;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="canvas">
+        <div class="cluster-boundary">
+            <div class="cluster-label">
+                <i data-lucide="layout-grid" style="width:16px;"></i>
+                KUBERNETES CLUSTER
+            </div>
+
+            <div class="node" style="left:20px; top:50px; width:60px; border-color:var(--accent-blue)">
+                <i data-lucide="layers" class="icon blue"></i>
+                <div class="node-label" style="font-size:10px">Pods</div>
+            </div>
+        </div>
+
+        <!-- Infrastructure -->
+        <div class="node github-actions purple">
+            <i data-lucide="github" class="icon purple"></i>
+            <div class="node-label">GitHub<br>Actions</div>
+        </div>
+
+        <div class="node docker-stack green">
+            <i data-lucide="container" class="icon green"></i>
+            <div class="node-label">Docker</div>
+            <div class="node-tag">Stack</div>
+        </div>
+
+        <!-- Messaging & DB -->
+        <div class="node rabbitmq purple">
+            <i data-lucide="message-square" class="icon purple"></i>
+            <div class="node-label">RabbitMQ</div>
+        </div>
+
+        <div class="node mysql">
+            <i data-lucide="database" class="icon blue"></i>
+            <div class="node-label">MySQL</div>
+        </div>
+
+        <!-- Microservices -->
+        <div class="node service-auth purple">
+            <div class="node-tag">Container</div>
+            <i data-lucide="shield" class="icon purple"></i>
+            <div class="node-label">Auth Service</div>
+        </div>
+
+        <div class="node service-user">
+            <div class="node-tag" style="background:var(--accent-blue); color:black; font-weight:bold">NEW</div>
+            <i data-lucide="users" class="icon blue"></i>
+            <div class="node-label">User Service</div>
+        </div>
+
+        <div class="node service-quiz purple">
+            <div class="node-tag">Container</div>
+            <i data-lucide="pencil" class="icon purple"></i>
+            <div class="node-label">Quiz Service</div>
+        </div>
+
+        <div class="node service-question purple">
+            <div class="node-tag">Container</div>
+            <i data-lucide="help-circle" class="icon purple"></i>
+            <div class="node-label">Question Service</div>
+        </div>
+
+        <!-- Frontend -->
+        <div class="node frontend green">
+            <i data-lucide="atom" class="icon green" style="width:48px; height:48px"></i>
+            <div class="node-label" style="font-size:18px; font-weight:700">React Frontend</div>
+        </div>
+
+        <div class="node gateway green">
+            <div class="node-label" style="font-weight:700">API Gateway</div>
+        </div>
+
+        <!-- Lines -->
+        <svg class="lines">
+            <!-- Github -> Docker -> Cluster -->
+            <path d="M 140 390 L 180 390" />
+            <path d="M 260 390 L 280 390" />
+
+            <!-- Frontend -> Gateway -->
+            <path d="M 1010 330 L 1010 400" stroke="#22c55e" stroke-width="3" />
+
+            <!-- Gateway -> Services -->
+            <path d="M 900 440 L 750 440 L 750 230 L 660 230" class="highlight-line" />
+            <path d="M 660 340 L 750 340" class="highlight-line" />
+            <path d="M 660 450 L 750 450" class="highlight-line" />
+            <path d="M 900 460 L 750 460 L 750 560 L 660 560" class="highlight-line" />
+
+            <!-- Services <-> Internal -->
+            <path d="M 520 340 L 450 360" />
+            <path d="M 520 450 L 450 490" />
+
+            <!-- DB Connections -->
+            <path d="M 520 570 Q 450 630 395 590" />
+        </svg>
+
+        <div class="legend">SYSTEM ARCHITECTURE DESIGN • PHASE 3 • USER SERVICE INTEGRATION</div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

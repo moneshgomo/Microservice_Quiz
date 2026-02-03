@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microservice System Architecture</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #05070a;
+            --surface-color: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --primary-accent: #00f2ff;
+            --secondary-accent: #bc13fe;
+            --node-bg: rgba(15, 20, 30, 0.8);
+            --text-color: #e0e6ed;
+            --glow: 0 0 20px rgba(0, 242, 255, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(0, 242, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(188, 19, 254, 0.05) 0%, transparent 40%);
+        }
+
+        .canvas {
+            position: relative;
+            width: 1200px;
+            height: 700px;
+            background: var(--surface-color);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+        }
+
+        .k8s-cluster {
+            position: absolute;
+            inset: 20px;
+            border: 2px dashed rgba(0, 242, 255, 0.2);
+            border-radius: 20px;
+            pointer-events: none;
+        }
+
+        .cluster-label {
+            position: absolute;
+            top: -12px;
+            left: 30px;
+            background: var(--bg-color);
+            padding: 0 12px;
+            color: var(--primary-accent);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Shared Node Styles */
+        .node {
+            position: absolute;
+            background: var(--node-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+
+        .node:hover {
+            border-color: var(--primary-accent);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 242, 255, 0.15);
+        }
+
+        .node-icon {
+            color: var(--primary-accent);
+            width: 32px;
+            height: 32px;
+        }
+
+        .node-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .node-meta {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: monospace;
+        }
+
+        /* Specific Nodes */
+        .frontend {
+            left: 80px;
+            top: 280px;
+            width: 140px;
+            border-left: 4px solid #61dafb;
+        }
+
+        .gateway {
+            left: 280px;
+            top: 280px;
+            width: 120px;
+            border-left: 4px solid var(--secondary-accent);
+        }
+
+        .auth-service {
+            left: 460px;
+            top: 150px;
+            width: 160px;
+            height: 380px;
+            border-left: 4px solid #6db33f;
+            justify-content: center;
+        }
+
+        .service-stack {
+            position: absolute;
+            left: 680px;
+            top: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .microservice {
+            width: 160px;
+        }
+
+        .database {
+            right: 100px;
+            top: 280px;
+            width: 140px;
+            border-left: 4px solid #00758f;
+        }
+
+        /* Connections (Simplified with CSS lines) */
+        .connection {
+            position: absolute;
+            background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
+            height: 2px;
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        .line-fe-gw {
+            left: 220px;
+            top: 328px;
+            width: 60px;
+        }
+
+        .line-gw-auth {
+            left: 400px;
+            top: 328px;
+            width: 60px;
+        }
+
+        .flow-lines {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        /* SVG Connections */
+        svg.connector {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .connector path {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.15);
+            stroke-width: 2;
+            stroke-dasharray: 5, 5;
+            transition: stroke 0.3s;
+        }
+
+        .node:hover~svg.connector path.active {
+            stroke: var(--primary-accent);
+            stroke-width: 3;
+            stroke-dasharray: none;
+            opacity: 0.8;
+        }
+
+        /* Docker/K8s Badges */
+        .tech-badge {
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            display: flex;
+            gap: 15px;
+            opacity: 0.5;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            left: 40px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes flow {
+            from {
+                stroke-dashoffset: 20;
+            }
+
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        .animated-flow {
+            stroke: var(--primary-accent) !important;
+            stroke-dasharray: 10, 5;
+            animation: flow 1s linear infinite;
+            opacity: 0.6 !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="canvas">
+        <div class="k8s-cluster">
+            <div class="cluster-label">
+                <i data-lucide="layers" style="width:16px;"></i>
+                Kubernetes Cluster Region-US-East
+            </div>
+        </div>
+
+        <!-- Frontend -->
+        <div class="node frontend">
+            <i data-lucide="layout" class="node-icon"></i>
+            <span class="node-title">React App</span>
+            <span class="node-meta">Port: 3000</span>
+            <div style="margin-top:4px"><i data-lucide="box" style="width:12px; opacity:0.6"></i></div>
+        </div>
+
+        <!-- API Gateway -->
+        <div class="node gateway">
+            <i data-lucide="git-branch" class="node-icon" style="color:var(--secondary-accent)"></i>
+            <span class="node-title">API Gateway</span>
+            <span class="node-meta">Port: 8000</span>
+        </div>
+
+        <!-- Auth Service -->
+        <div class="node auth-service">
+            <i data-lucide="shield-check" class="node-icon" style="color:#6db33f; width:48px; height:48px;"></i>
+            <span class="node-title">Auth Service</span>
+            <span class="node-meta">Spring Boot</span>
+            <div style="margin-top:20px; opacity:0.4; text-align:center; font-size:10px;">
+                JWT Verification<br>Route Filtering<br>Security Context
+            </div>
+        </div>
+
+        <!-- Microservices Stack -->
+        <div class="service-stack">
+            <div class="node microservice">
+                <i data-lucide="user" class="node-icon"></i>
+                <span class="node-title">User Service</span>
+                <span class="node-meta">Users/Profiles</span>
+            </div>
+            <div class="node microservice">
+                <i data-lucide="book-open" class="node-icon"></i>
+                <span class="node-title">Quiz Service</span>
+                <span class="node-meta">Exams/Logic</span>
+            </div>
+            <div class="node microservice">
+                <i data-lucide="settings" class="node-icon"></i>
+                <span class="node-title">Admin Service</span>
+                <span class="node-meta">Management</span>
+            </div>
+        </div>
+
+        <!-- Database -->
+        <div class="node database">
+            <i data-lucide="database" class="node-icon" style="color:#00758f"></i>
+            <span class="node-title">MySQL DB</span>
+            <span class="node-meta">Cluster Instance</span>
+        </div>
+
+        <!-- SVG Connections -->
+        <svg class="connector">
+            <!-- FE to GW -->
+            <path d="M 220 328 L 280 328" class="animated-flow" />
+
+            <!-- GW to Auth -->
+            <path d="M 400 328 L 460 328" class="animated-flow" />
+
+            <!-- Auth to Services -->
+            <path d="M 620 280 L 680 150" class="animated-flow" />
+            <path d="M 620 310 L 680 255" class="animated-flow" />
+            <path d="M 620 340 L 680 360" class="animated-flow" />
+
+            <!-- Services to DB -->
+            <path d="M 840 150 Q 960 150 960 280" stroke="rgba(255,255,255,0.1)" />
+            <path d="M 840 255 L 960 300" stroke="rgba(255,255,255,0.1)" />
+            <path d="M 840 360 Q 960 360 960 330" stroke="rgba(255,255,255,0.1)" />
+        </svg>
+
+        <div class="tech-badge">
+            <i data-lucide="container" title="Docker"></i>
+            <i data-lucide="cloud" title="Cloud Native"></i>
+            <i data-lucide="terminal" title="Microservices"></i>
+        </div>
+
+        <div class="footer">
+            System Architecture 2.0 • User Service Integration Flow
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
