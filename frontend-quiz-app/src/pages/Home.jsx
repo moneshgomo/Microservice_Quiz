@@ -32,7 +32,7 @@ export default function Home() {
             <main className="container" style={{ paddingTop: '2rem' }}>
                 <header style={{ marginBottom: '3rem', textAlign: 'center' }}>
                     <h1 className="gradient-text" style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '1rem' }}>
-                        Test Your Knowledge
+                        Test Your understanding of Backend Engineering
                     </h1>
                     <p style={{ color: 'var(--text-muted)', fontSize: '1.25rem', maxWidth: '600px', margin: '0 auto' }}>
                         Select a quiz below to challenge yourself, or create your own custom quiz.

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("question")
+@RequestMapping("/question")
 public class QuestionController {
 
     @Autowired
@@ -23,40 +23,40 @@ public class QuestionController {
     @Autowired
     Environment environment;
 
-    @GetMapping("allQuestions")
+    @GetMapping("/allQuestions")
     public ResponseEntity<List<Question>> getAllQuestions(){
         return questionService.getAllQuestions();
     }
 
-    @GetMapping("category/{category}")
+    @GetMapping("/category/{category}")
     public ResponseEntity<List<Question>> getQuestionsByCategory(@PathVariable String category){
         return questionService.getQuestionsByCategory(category);
     }
 
-    @PostMapping("add")
+    @PostMapping("/add")
     public ResponseEntity<String> addQuestion(@RequestBody Question question){
         return  questionService.addQuestion(question);
     }
 
-    @GetMapping("generate")
+    @GetMapping("/generate")
     public ResponseEntity<List<Integer>> getQuestionsForQuiz
             (@RequestParam String categoryName, @RequestParam Integer numQuestions ){
         return questionService.getQuestionsForQuiz(categoryName, numQuestions);
     }
 
-    @PostMapping("getQuestions")
+    @PostMapping("/getQuestions")
     public ResponseEntity<List<QuestionWrapper>> getQuestionsFromId(@RequestBody List<Integer> questionIds){
         System.out.println(environment.getProperty("local.server.port"));
         return questionService.getQuestionsFromId(questionIds);
     }
 
-    @PostMapping("getScore")
+    @PostMapping("/getScore")
     public ResponseEntity<Integer> getScore(@RequestBody List<Response> responses)
     {
         return questionService.getScore(responses);
     }
 
-    @GetMapping("getCategories")
+    @GetMapping("/getCategories")
     public ResponseEntity<List<String>> getCategories(){
         return questionService.getCategories();
     }
