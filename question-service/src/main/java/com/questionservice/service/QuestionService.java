@@ -10,17 +10,30 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class QuestionService {
     @Autowired
     QuestionDao questionDao;
 
+    private final String CODE_PATTERNS =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
+
+
+    private static final int RANDOM_LENGTH = 10;
+
+    private final Random random = new Random();
+
+
     public ResponseEntity<List<Question>> getAllQuestions() {
         try {
-            return new ResponseEntity<>(questionDao.findAll(), HttpStatus.OK);
+            return new ResponseEntity<>(questionDao.findQuestionsWithNullCode(), HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -37,11 +50,33 @@ public class QuestionService {
 
     }
 
-    public ResponseEntity<String> addQuestion(Question question) {
-        questionDao.save(question);
-        return new ResponseEntity<>("success",HttpStatus.CREATED);
+    public ResponseEntity<String> addQuestion(List<Question> questions) {
+
+        String generatedCode = generateQuestionCode();
+
+        for (Question question : questions) {
+            question.setQuestion_code(generatedCode);
+        }
+
+        questionDao.saveAll(questions);
+
+        return new ResponseEntity<>(generatedCode, HttpStatus.CREATED);
     }
 
+
+    private String generateQuestionCode() {
+
+        String timePart = LocalDateTime.now()
+                .format(DateTimeFormatter.ofPattern("HHmmss"));
+
+        StringBuilder randomPart = new StringBuilder();
+        for (int i = 0; i < RANDOM_LENGTH; i++) {
+            int index = random.nextInt(CODE_PATTERNS.length());
+            randomPart.append(CODE_PATTERNS.charAt(index));
+        }
+
+        return timePart + randomPart.toString();
+    }
     public ResponseEntity<List<Integer>> getQuestionsForQuiz(String categoryName, Integer numQuestions) {
         List<Integer> questions = questionDao.findRandomQuestionsByCategory(categoryName, numQuestions);
         return new ResponseEntity<>(questions, HttpStatus.OK);
@@ -86,4 +121,10 @@ public class QuestionService {
     public ResponseEntity<List<String>> getCategories() {
         return new ResponseEntity<>(questionDao.getCategories(), HttpStatus.OK);
     }
+
+    public List<Integer> getQuestionBasedOnQuestion_Code(String questionCode) {
+        return questionDao.findQuestionIdsByCode(questionCode);
+    }
+
+
 }

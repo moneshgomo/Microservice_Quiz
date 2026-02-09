@@ -31,8 +31,8 @@ export default function Home() {
             <Navbar />
             <main className="container" style={{ paddingTop: '2rem' }}>
                 <header style={{ marginBottom: '3rem', textAlign: 'center' }}>
-                    <h1 className="gradient-text" style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '1rem' }}>
-                        Test Your understanding of Backend Engineering
+                    <h1 style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '1rem', color: 'var(--text-main)' }}>
+                        Test Your understanding of Backend <span className="gradient-text">Engineering</span>
                     </h1>
                     <p style={{ color: 'var(--text-muted)', fontSize: '1.25rem', maxWidth: '600px', margin: '0 auto' }}>
                         Select a quiz below to challenge yourself, or create your own custom quiz.
@@ -56,18 +56,34 @@ export default function Home() {
                             <div style={{ textAlign: 'center', padding: '4rem', opacity: 0.7 }}>
                                 <h3>No quizzes available.</h3>
                                 <p style={{ marginBottom: '2rem' }}>Be the first to create one!</p>
-                                <Link to="/create" className="btn btn-primary">Create Quiz</Link>
+                                <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                                    <Link to="/add-questions" className="btn btn-primary">Private Quiz</Link>
+                                </div>
                             </div>
                         ) : (
-                            <div style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-                                gap: '2rem'
-                            }}>
-                                {quizzes.map(quiz => (
-                                    <QuizCard key={quiz.id} quiz={quiz} />
-                                ))}
-                            </div>
+                            <>
+                                <div style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    gap: '1rem',
+                                    marginBottom: '3rem',
+                                    flexWrap: 'wrap'
+                                }}>
+                                    <Link to="/add-questions" className="btn btn-primary">Private Quiz</Link>
+                                    <Link to="/create-quiz-code" className="btn btn-primary" style={{ background: 'var(--secondary)', color: 'var(--primary)', border: '1px solid var(--primary)' }}>Teacher: Create Quiz</Link>
+                                    <Link to="/enter-code" className="btn btn-secondary" style={{ border: '1px solid var(--primary)', color: 'var(--primary)' }}>Student: Enter Code</Link>
+                                </div>
+
+                                <div style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                                    gap: '2rem'
+                                }}>
+                                    {quizzes.map(quiz => (
+                                        <QuizCard key={quiz.id} quiz={quiz} />
+                                    ))}
+                                </div>
+                            </>
                         )}
                     </>
                 )}

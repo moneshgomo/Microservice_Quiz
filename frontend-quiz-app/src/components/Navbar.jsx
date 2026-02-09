@@ -11,9 +11,6 @@ export default function Navbar() {
                 </Link>
                 <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
                     <Link to="/" style={{ transition: 'color 0.2s' }}>Home</Link>
-                    <Link to="/create" className="btn btn-primary" style={{ fontSize: '0.875rem', padding: '0.5rem 1rem', borderRadius: '999px' }}>
-                        <Plus size={16} /> Create Quiz
-                    </Link>
                 </div>
             </div>
         </nav>

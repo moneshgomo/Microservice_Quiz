@@ -23,4 +23,21 @@ public interface QuestionDao extends JpaRepository<Question, Integer> {
 
     @Query(value = "SELECT DISTINCT category FROM question", nativeQuery = true)
     public List<String> getCategories();
+
+    @Query(
+            value = """
+        SELECT id
+        FROM question
+        WHERE question_code = :questionCode
+    """,
+            nativeQuery = true
+    )
+    List<Integer> findQuestionIdsByCode(
+            @Param("questionCode") String questionCode
+    );
+
+
+    @Query(value = "SELECT * FROM question WHERE question_code IS NULL", nativeQuery = true)
+    List<Question> findQuestionsWithNullCode();
+
 }

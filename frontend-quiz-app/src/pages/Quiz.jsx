@@ -33,11 +33,20 @@ export default function Quiz() {
         fetchQuestions();
     }, [id, navigate]);
 
+    const [forceSubmit, setForceSubmit] = useState(false);
+
     const handleSelect = (questionId, option) => {
-        setAnswers(prev => ({
-            ...prev,
-            [questionId]: option
-        }));
+        setAnswers(prev => {
+            if (prev[questionId] === option) {
+                const newAnswers = { ...prev };
+                delete newAnswers[questionId];
+                return newAnswers;
+            }
+            return {
+                ...prev,
+                [questionId]: option
+            };
+        });
     };
 
     const handleSubmit = async () => {
@@ -49,8 +58,9 @@ export default function Quiz() {
         }));
 
         // Validate all answered?
-        if (responseList.length < questions.length) {
-            if (!window.confirm("You haven't answered all questions. Submit anyway?")) return;
+        if (!forceSubmit && responseList.length < questions.length) {
+            alert("Please answer all questions before submitting, or check the box to submit incomplete.");
+            return;
         }
 
         setLoading(true);
@@ -136,10 +146,10 @@ export default function Quiz() {
                                         style={{
                                             padding: '1rem',
                                             borderRadius: 'var(--radius)',
-                                            background: answers[q.id] === opt ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
+                                            background: answers[q.id] === opt ? 'var(--primary)' : 'white',
                                             color: answers[q.id] === opt ? 'white' : 'var(--text-main)',
                                             textAlign: 'left',
-                                            border: answers[q.id] === opt ? '1px solid var(--primary)' : '1px solid transparent',
+                                            border: answers[q.id] === opt ? '1px solid var(--primary)' : '1px solid var(--border)',
                                             transition: 'all 0.2s',
                                             display: 'flex',
                                             justifyContent: 'space-between',
@@ -156,6 +166,18 @@ export default function Quiz() {
                 </div>
 
                 <div style={{ marginTop: '3rem', display: 'flex', justifyContent: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+                        <input
+                            type="checkbox"
+                            id="forceSubmit"
+                            checked={forceSubmit}
+                            onChange={(e) => setForceSubmit(e.target.checked)}
+                            style={{ width: 'auto', marginRight: '0.5rem' }}
+                        />
+                        <label htmlFor="forceSubmit" style={{ color: 'var(--text-muted)', cursor: 'pointer' }}>
+                            Allow submitting incomplete quiz
+                        </label>
+                    </div>
                     <button
                         onClick={handleSubmit}
                         className="btn btn-primary"

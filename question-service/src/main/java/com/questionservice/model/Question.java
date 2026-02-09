@@ -1,10 +1,10 @@
 package com.questionservice.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -19,8 +19,15 @@ public class Question {
     private String option3;
     private String option4;
     private String rightAnswer;
-    private String difficultylevel;
+    private String difficultyLevel;
     private String category;
+    private LocalDateTime createdAt ;
 
+    private String question_code;
+
+    @PrePersist
+    protected void onCreate(){
+        this.createdAt=LocalDateTime.now();
+    }
 
 }
