@@ -21,7 +21,7 @@ export default function QuizCard({ quiz }) {
                     </span>
                     <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>{questionCount} Questions</span>
                 </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '0.5rem', color: 'white' }}>{quiz.title}</h3>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '0.5rem', color: 'var(--text-main)' }}>{quiz.title}</h3>
             </div>
             <Link to={`/quiz/${quiz.id}`} className="btn btn-primary" style={{ marginTop: '1rem', width: '100%', justifyContent: 'center' }}>
                 Start Quiz <Play size={16} />

@@ -1,9 +1,6 @@
 package com.quizservice.controller;
 
-import com.quizservice.model.QuestionWrapper;
-import com.quizservice.model.Quiz;
-import com.quizservice.model.QuizDto;
-import com.quizservice.model.Response;
+import com.quizservice.model.*;
 import com.quizservice.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +21,27 @@ public class QuizController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createQuiz(@RequestBody QuizDto quizDto) {
-        return quizService.createQuiz(quizDto.getCategoryName(), quizDto.getNumQuestions(), quizDto.getTitle());
+    public ResponseEntity<String> createQuiz(@RequestBody QuizCreateRequestNO_CODE quizDto) {
+        return quizService.createQuiz(
+                quizDto.categoryName(),
+                quizDto.numQuestions(),
+                quizDto.title()
+        );
     }
+
+
+
+    @PostMapping("/create/code")
+    public ResponseEntity<String> createQuizUsingCode(@RequestBody QuizCreateRequestWith_CODE questionCode) {
+        return quizService.createPrivateQuiz(questionCode);
+    }
+
+    @PostMapping("/attend_Quiz")
+    public ResponseEntity<QuizResponse> getQuizBasedOnCode(@RequestParam String quiz_code){
+        return quizService.getQuizBasedOnQuizCode(quiz_code);
+    }
+
+
 
     @GetMapping("/get/{id}")
     public ResponseEntity<List<QuestionWrapper>> getQuizQuestions(@PathVariable Integer id) {
@@ -38,7 +53,7 @@ public class QuizController {
         return quizService.calculateResult(id, responses);
     }
 
-    @GetMapping("/categories")
+    @GetMapping("/categories")  // remove later
     public ResponseEntity<List<String>> getCategories() {
         return quizService.getCategories();
     }

@@ -3,6 +3,7 @@ package com.quizservice.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -16,5 +17,16 @@ public class Quiz {
 
     @ElementCollection
     private List<Integer> questionIds;
+
+    private LocalDateTime createdAt;
+
+    @Column(nullable = true)
+    private String quizCode ;
+
+    @PrePersist
+    protected void onCreate(){
+        this.createdAt=LocalDateTime.now();
+    }
+
 
 }

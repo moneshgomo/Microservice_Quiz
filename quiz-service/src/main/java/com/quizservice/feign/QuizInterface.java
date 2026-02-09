@@ -3,6 +3,7 @@ package com.quizservice.feign;
 import com.quizservice.model.QuestionWrapper;
 import com.quizservice.model.Response;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.HttpInputMessage;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,4 +28,7 @@ public interface QuizInterface {
     @GetMapping("question/getCategories")
     public ResponseEntity<List<String>> getCategories();
 
+
+    @GetMapping("/question/questions_code")
+    public ResponseEntity<List<Integer>> getQuestionsBasedOnQuestionCode(@RequestParam("questionCode") String questionCode);
 }
