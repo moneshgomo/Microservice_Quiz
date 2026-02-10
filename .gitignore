@@ -1,0 +1,52 @@
+# ===============================
+# IDE Files
+# ===============================
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+out/
+
+# VS Code
+.vscode/
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# ===============================
+# Build Files
+# ===============================
+
+target/
+build/
+dist/
+
+# Maven Wrapper logs
+.mvn/wrapper/maven-wrapper.jar
+
+# ===============================
+# Logs
+# ===============================
+*.log
+
+# ===============================
+# OS Files
+# ===============================
+.DS_Store
+Thumbs.db
+
+# ===============================
+# Environment / Secrets
+# ===============================
+.env
+.env.*
+application-local.properties
+application-dev.properties
+
+# ===============================
+# Node (Frontend)
+# ===============================
+node_modules/
