@@ -28,6 +28,13 @@ public class QuestionController {
     @Autowired
     Environment environment;
 
+
+    @GetMapping("/test")
+    public ResponseEntity<String> checkService(){
+        return ResponseEntity.ok("Question Service is up and running on port: " + environment.getProperty("local.server.port"));
+    }
+
+
     @GetMapping("/allQuestions")
     public ResponseEntity<List<Question>> getAllQuestions(){
         return questionService.getAllQuestions();

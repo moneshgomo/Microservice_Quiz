@@ -1,0 +1,8 @@
+target/
+*.jar
+*.log
+.git
+.gitignore
+node_modules/
+.env
+src/main/resources/application-dev.yml

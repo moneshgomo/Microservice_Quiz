@@ -5,8 +5,9 @@ import com.quizservice.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.core.env.Environment;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/quiz")
@@ -14,6 +15,16 @@ public class QuizController {
 
     @Autowired
     QuizService quizService;
+
+    @Autowired
+    Environment environment;
+
+    // adding endpoits for testing, will remove later
+    @GetMapping("/test")
+    public ResponseEntity<String> checkService() {
+        return ResponseEntity
+                .ok("Quiz Service is up and running on port: " + environment.getProperty("local.server.port"));
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<Quiz>> getAllQuizzes() {

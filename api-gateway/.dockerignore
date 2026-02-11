@@ -1,0 +1,7 @@
+target/
+*.jar
+*.log
+.git
+.gitignore
+node_modules/
+.env
