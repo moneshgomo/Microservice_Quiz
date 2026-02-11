@@ -43,8 +43,8 @@ Thumbs.db
 # ===============================
 .env
 .env.*
-application-local.properties
-application-dev.properties
+application-local.yml
+application-dev.yml
 
 # ===============================
 # Node (Frontend)
