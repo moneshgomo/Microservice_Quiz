@@ -16,7 +16,7 @@ public interface QuizDao extends JpaRepository<Quiz,Integer> {
     List<Integer> findByQuizCode(@Param("quizCode") String quizCode);
 
 
-    @Query(value = "SELECT * FROM quiz WHERE quiz_code = :quizCode", nativeQuery = true)
+    @Query("SELECT q FROM Quiz q WHERE q.quizCode = :quizCode")
     Optional<Quiz> findByQuizByCode(@Param("quizCode") String quizCode);
 
     @Query(value = "SELECT * FROM quiz WHERE quiz_code IS NULL", nativeQuery = true)
