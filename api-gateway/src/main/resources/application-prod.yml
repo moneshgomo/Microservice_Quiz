@@ -16,6 +16,18 @@ spring:
           uri: lb://QUIZ-SERVICE
           predicates:
             - Path=/quiz/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: ${FRONTEND_URL}
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
 
 eureka:
   client:

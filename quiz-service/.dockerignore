@@ -1,0 +1,38 @@
+# Git
+.git
+.gitignore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea
+.vscode
+*.iml
+
+# Logs
+*.log
+logs/
+
+# Environment files
+.env
+.env.*
+
+# Ignore dev configuration
+src/main/resources/application-dev.yml
+
+# Maven target
+target/*
+!target/*.jar
+
+# Tests
+src/test/
+
+# Docs
+README.md
+docs/
+
+# Temp
+tmp/
+temp/

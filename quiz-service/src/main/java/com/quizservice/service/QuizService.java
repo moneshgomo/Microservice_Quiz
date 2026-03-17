@@ -8,11 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -32,7 +29,7 @@ public class QuizService {
     }
 
     private  final String CODE_PATTERNS =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*())_";
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     private static final int RANDOM_LENGTH = 10;
 

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: question-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: question-service
+  template:
+    metadata:
+      labels:
+        app: question-service
+    spec:
+      containers:
+        - name: question-service
+          image: moneshgomo/questionservice:testing_v3
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SERVER_PORT
+              value: "8081"
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config
+                  key: QUESTION_DB_URL
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_PASSWORD
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://service-registry:8761/eureka"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: question-service
+spec:
+  type: ClusterIP
+  selector:
+    app: question-service
+  ports:
+    - port: 8081
+      targetPort: 8081

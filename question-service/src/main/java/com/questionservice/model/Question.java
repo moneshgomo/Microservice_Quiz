@@ -3,7 +3,6 @@ package com.questionservice.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 
 @Data
