@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Sparkles, Plus } from 'lucide-react';
+import { Sparkles, Github, Globe } from 'lucide-react';
 
 export default function Navbar() {
     return (
@@ -9,8 +9,14 @@ export default function Navbar() {
                     <Sparkles style={{ color: 'var(--primary)' }} />
                     <span className="gradient-text">BackendIQ</span>
                 </Link>
-                <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-                    <Link to="/" style={{ transition: 'color 0.2s' }}>Home</Link>
+
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <a href="https://github.com/moneshgomo" target="_blank" rel="noopener noreferrer" className="nav-icon-btn" title="GitHub">
+                        <Github size={40} />
+                    </a>
+                    <a href="https://moneshgomo.netlify.app" target="_blank" rel="noopener noreferrer" className="nav-icon-btn" title="Portfolio">
+                        <Globe size={40} />
+                    </a>
                 </div>
             </div>
         </nav>

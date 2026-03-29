@@ -62,6 +62,7 @@ export default function Home() {
                             </div>
                         ) : (
                             <>
+                                {/* ✅ 3 Buttons - green outline style */}
                                 <div style={{
                                     display: 'flex',
                                     justifyContent: 'center',
@@ -69,11 +70,18 @@ export default function Home() {
                                     marginBottom: '3rem',
                                     flexWrap: 'wrap'
                                 }}>
-                                    <Link to="/add-questions" className="btn btn-primary">Private Quiz</Link>
-                                    <Link to="/create-quiz-code" className="btn btn-primary" style={{ background: 'var(--secondary)', color: 'var(--primary)', border: '1px solid var(--primary)' }}>Teacher: Create Quiz</Link>
-                                    <Link to="/enter-code" className="btn btn-secondary" style={{ border: '1px solid var(--primary)', color: 'var(--primary)' }}>Student: Enter Code</Link>
+                                    <Link to="/add-questions" className="btn green-outline-btn">
+                                        Custom Quiz Questions
+                                    </Link>
+                                    <Link to="/create-quiz-code" className="btn green-outline-btn">
+                                        Teacher: Create Quiz
+                                    </Link>
+                                    <Link to="/enter-code" className="btn green-outline-btn">
+                                        Student: Enter Code
+                                    </Link>
                                 </div>
 
+                                {/* ✅ Quiz cards grid - this was missing! */}
                                 <div style={{
                                     display: 'grid',
                                     gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',

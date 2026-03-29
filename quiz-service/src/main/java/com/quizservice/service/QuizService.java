@@ -38,9 +38,17 @@ public class QuizService {
 
 
     public ResponseEntity<String> createQuiz(String category, int numQ, String title) {
-
-        return null;
-    }  // hold this public quiz
+        log.info("createQuiz method triggered for public quiz with category: {}, numQ: {}, title: {}", category, numQ, title);
+        List<Integer> questions = quizInterface.getQuestionsForQuiz(category, numQ).getBody();
+        
+        Quiz quiz = new Quiz();
+        quiz.setTitle(title);
+        quiz.setQuestionIds(questions);
+        
+        quizDao.save(quiz);
+        
+        return new ResponseEntity<>("Success", HttpStatus.CREATED);
+    }
 
 
 
