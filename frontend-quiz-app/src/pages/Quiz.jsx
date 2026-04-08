@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { quizApi } from '../services/api';
+import { getApiErrorMessage, quizApi } from '../services/api';
 import Navbar from '../components/Navbar';
 import { Loader2, CheckCircle, ChevronRight, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -24,7 +24,7 @@ export default function Quiz() {
                 setQuestions(res.data);
             } catch (err) {
                 console.error(err);
-                alert('Failed to load quiz');
+                alert(getApiErrorMessage(err, 'Failed to load quiz.'));
                 navigate('/');
             } finally {
                 setLoading(false);
@@ -70,7 +70,7 @@ export default function Quiz() {
             setSubmitted(true);
         } catch (err) {
             console.error(err);
-            alert('Error submitting quiz');
+            alert(getApiErrorMessage(err, 'Error submitting quiz.'));
         } finally {
             setLoading(false);
         }

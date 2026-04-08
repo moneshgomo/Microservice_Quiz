@@ -31,21 +31,11 @@ public class QuestionService {
 
 
     public ResponseEntity<List<Question>> getAllQuestions() {
-        try {
-            return new ResponseEntity<>(questionDao.findQuestionsWithNullCode(), HttpStatus.OK);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(questionDao.findQuestionsWithNullCode(), HttpStatus.OK);
     }
 
     public ResponseEntity<List<Question>> getQuestionsByCategory(String category) {
-        try {
-            return new ResponseEntity<>(questionDao.findByCategory(category),HttpStatus.OK);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(questionDao.findByCategory(category),HttpStatus.OK);
 
     }
 

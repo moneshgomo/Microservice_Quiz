@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import QuizCard from '../components/QuizCard';
-import { quizApi } from '../services/api';
+import { getApiErrorMessage, quizApi } from '../services/api';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -20,7 +20,7 @@ export default function Home() {
             setQuizzes(response.data);
         } catch (err) {
             console.error(err);
-            setError('Failed to fetch quizzes. Make sure the backend is running.');
+            setError(getApiErrorMessage(err, 'Failed to fetch quizzes. Make sure the backend is running.'));
         } finally {
             setLoading(false);
         }
