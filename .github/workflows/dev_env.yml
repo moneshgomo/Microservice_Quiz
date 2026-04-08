@@ -3,7 +3,7 @@ name: Docker CI/CD - Dev
 on:
   push:
     branches:
-      - dev
+      - dev 
 
 permissions:
   contents: read
