@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { quizApi } from '../services/api';
+import { getApiErrorMessage, quizApi } from '../services/api';
 import { Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import BookLoader from '../components/BookLoader';
 
@@ -52,9 +52,9 @@ export default function TakeQuizByCode() {
         } catch (err) {
             console.error(err);
             if (err.response && err.response.status === 404) {
-                setError('The quiz code you entered is invalid.');
+                setError(getApiErrorMessage(err, 'The quiz code you entered is invalid.'));
             } else {
-                setError('Failed to load quiz. Please try again later.');
+                setError(getApiErrorMessage(err, 'Failed to load quiz. Please try again later.'));
             }
         } finally {
             const elapsedTime = Date.now() - startTime;
@@ -100,7 +100,7 @@ export default function TakeQuizByCode() {
             setResult(res.data);
         } catch (err) {
             console.error(err);
-            alert('Failed to submit quiz.');
+            alert(getApiErrorMessage(err, 'Failed to submit quiz.'));
         } finally {
             setSubmitting(false);
         }

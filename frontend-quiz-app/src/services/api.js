@@ -7,6 +7,17 @@ const api = axios.create({
     },
 });
 
+export const getApiErrorMessage = (error, fallbackMessage = 'Something went wrong. Please try again.') => {
+    const backendMessage = error?.response?.data?.message;
+    if (typeof backendMessage === 'string' && backendMessage.trim().length > 0) {
+        return backendMessage;
+    }
+    if (error?.code === 'ERR_NETWORK') {
+        return 'Unable to connect to server. Please check your internet or backend service.';
+    }
+    return fallbackMessage;
+};
+
 export const quizApi = {
     getAllQuizzes: () => api.get('/quiz/all'),
     getCategories: () => api.get('/quiz/categories'),

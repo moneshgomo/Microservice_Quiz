@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
-import { quizApi } from '../services/api';
+import { getApiErrorMessage, quizApi } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, ArrowLeft } from 'lucide-react';
 
@@ -26,7 +26,7 @@ export default function CreateQuiz() {
             setCategories(res.data);
         } catch (err) {
             console.error('Failed to fetch categories:', err);
-            setError('Failed to load categories. Using manual input.');
+            setError(getApiErrorMessage(err, 'Failed to load categories. Using manual input.'));
         } finally {
             setLoadingCategories(false);
         }
@@ -53,7 +53,7 @@ export default function CreateQuiz() {
             }
         } catch (err) {
             console.error(err);
-            setError('Failed to create quiz. Ensure the category exists and service is up.');
+            setError(getApiErrorMessage(err, 'Failed to create quiz. Ensure the category exists and service is up.'));
         } finally {
             setLoading(false);
         }

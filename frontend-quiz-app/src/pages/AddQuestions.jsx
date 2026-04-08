@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
-import { quizApi } from '../services/api';
+import { getApiErrorMessage, quizApi } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, Plus, ArrowLeft, Send } from 'lucide-react';
 
@@ -52,7 +52,7 @@ export default function AddQuestions() {
             setQuestions([]);
         } catch (err) {
             console.error(err);
-            alert('Failed to submit questions');
+            alert(getApiErrorMessage(err, 'Failed to submit questions.'));
         } finally {
             setLoading(false);
         }
