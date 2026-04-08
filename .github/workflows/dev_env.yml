@@ -28,34 +28,26 @@ jobs:
             dockerfile: ./service-registry/Dockerfile
             image_suffix: service-registry
             push_latest: "false"
-            build_args: ""
           - name: question-service
             context: ./question-service
             dockerfile: ./question-service/Dockerfile
             image_suffix: question-service
             push_latest: "false"
-            build_args: ""
           - name: quiz-service
             context: ./quiz-service
             dockerfile: ./quiz-service/Dockerfile
             image_suffix: quiz-service
             push_latest: "false"
-            build_args: ""
           - name: api-gateway
             context: ./api-gateway
             dockerfile: ./api-gateway/Dockerfile
             image_suffix: api-gateway
             push_latest: "true"
-            build_args: |
-              SERVER_PORT=${{ secrets.API_GATEWAY_SERVER_PORT }}
-              FRONTEND_URL=${{ secrets.FRONTEND_URL }}
           - name: frontend-quiz-app
             context: ./frontend-quiz-app
             dockerfile: ./frontend-quiz-app/Dockerfile
             image_suffix: frontend-quiz-app
             push_latest: "true"
-            build_args: |
-              VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}
 
     steps:
       - name: Checkout source
@@ -82,7 +74,7 @@ jobs:
             echo "tags<<EOF"
             echo "${IMAGE}:${BRANCH_TAG}"
             echo "${IMAGE}:${SHA_TAG}"
-            if [[ "${{ matrix.service.push_latest }}" == "true" ]]; then
+            if [[ "${matrix.service.push_latest}" == "true" ]]; then
               echo "${IMAGE}:latest"
             fi
             echo "EOF"
@@ -95,7 +87,11 @@ jobs:
           file: ${{ matrix.service.dockerfile }}
           push: true
           tags: ${{ steps.prep.outputs.tags }}
-          build-args: ${{ matrix.service.build_args }}
+          build-args: |
+            # Only pass secrets here, depending on the service
+            ${{ 'SERVER_PORT=' + secrets.API_GATEWAY_SERVER_PORT if matrix.service.name == 'api-gateway' else '' }}
+            ${{ 'FRONTEND_URL=' + secrets.FRONTEND_URL if matrix.service.name == 'api-gateway' else '' }}
+            ${{ 'VITE_API_BASE_URL=' + secrets.VITE_API_BASE_URL if matrix.service.name == 'frontend-quiz-app' else '' }}
           labels: |
             org.opencontainers.image.title=${{ matrix.service.name }}
             org.opencontainers.image.version=dev
