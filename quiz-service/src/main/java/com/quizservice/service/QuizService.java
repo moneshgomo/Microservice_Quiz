@@ -54,9 +54,7 @@ public class QuizService {
 
     public ResponseEntity<String> createPrivateQuiz(QuizCreateRequestWith_CODE quizCreateRequestWithCode) {
 
-//
-//        String question_code = quizCreateRequestWithCode.QUIZ_GENERATOR_CODE();
-//        System.out.println("Question code sent: " + question_code);
+
 
         System.out.println("createQuiz method triggered");
         log.info("Full request: {}", quizCreateRequestWithCode);
@@ -74,6 +72,22 @@ public class QuizService {
 
         return new ResponseEntity<>(QUIZ_CODE, HttpStatus.CREATED);
 
+    }
+
+    public ResponseEntity<String> createPublicQuiz(QuizCreateRequestWith_CODE quizCreateRequestWithCode) {
+        log.info("createPublicQuiz method triggered for title: {}", quizCreateRequestWithCode.title());
+        List<Integer> questions = quizInterface
+                .getQuestionsBasedOnQuestionCode(quizCreateRequestWithCode.QUIZ_GENERATOR_CODE())
+                .getBody();
+
+        Quiz quiz = new Quiz();
+        quiz.setTitle(quizCreateRequestWithCode.title());
+        quiz.setQuestionIds(questions);
+        quiz.setQuizCode(null);
+
+        Quiz savedQuiz = quizDao.save(quiz);
+
+        return new ResponseEntity<>("Public quiz created with id: " + savedQuiz.getId(), HttpStatus.CREATED);
     }
     private String generateQuestionCode(String alterQuestionCodeToQuizCode ) {
 
@@ -136,6 +150,25 @@ public class QuizService {
 
         QuizResponse response =
                 new QuizResponse(quizId,quiz.getTitle(), questions);
+
+        return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<QuizResponse> getPublicQuizById(Integer id) {
+        Optional<Quiz> optionalQuiz = quizDao.findById(id);
+
+        if (optionalQuiz.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Quiz quiz = optionalQuiz.get();
+
+        if (quiz.getQuizCode() != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        List<QuestionWrapper> questions = quizInterface.getQuestionsFromId(quiz.getQuestionIds()).getBody();
+        QuizResponse response = new QuizResponse(Long.valueOf(quiz.getId()), quiz.getTitle(), questions);
 
         return ResponseEntity.ok(response);
     }

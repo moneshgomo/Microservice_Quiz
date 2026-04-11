@@ -36,9 +36,19 @@ public class QuizController {
         return quizService.createPrivateQuiz(questionCode);
     }
 
+    @PostMapping("/create/public")
+    public ResponseEntity<String> createPublicQuiz(@RequestBody QuizCreateRequestWith_CODE questionCode) {
+        return quizService.createPublicQuiz(questionCode);
+    }
+
     @PostMapping("/attend_Quiz")
     public ResponseEntity<QuizResponse> getQuizBasedOnCode(@RequestParam String quiz_code){
         return quizService.getQuizBasedOnQuizCode(quiz_code);
+    }
+
+    @GetMapping("/attend_public/{id}")
+    public ResponseEntity<QuizResponse> getPublicQuiz(@PathVariable Integer id) {
+        return quizService.getPublicQuizById(id);
     }
 
 

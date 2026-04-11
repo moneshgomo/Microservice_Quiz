@@ -1,6 +1,6 @@
 spring:
   application:
-    name: api-gateway
+    name: quiz-service
 
   profiles:
     active: prod

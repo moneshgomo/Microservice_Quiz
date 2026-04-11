@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
-import { quizApi } from '../services/api';
+import { getApiErrorMessage, quizApi } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, ArrowLeft } from 'lucide-react';
 
@@ -40,7 +40,7 @@ export default function CreateQuizFromCode() {
             setCreatedQuizCode(response.data);
         } catch (err) {
             console.error(err);
-            setError('Failed to create quiz. Please check the code and try again.');
+            setError(getApiErrorMessage(err, 'Failed to create quiz. Please check the code and try again.'));
         } finally {
             setLoading(false);
         }
