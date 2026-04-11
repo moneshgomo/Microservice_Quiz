@@ -38,12 +38,13 @@ A microservices-based Quiz Application built with Spring Boot, containerized wit
 - [x] Dockerized all services and pushed to Docker Hub
 - [x] Kubernetes manifests — Deployments, Services, ConfigMaps, Secrets
 - [x] Deployed and running on KIND cluster locally
+- [x] CI/CD pipeline auto push Docker images to Docker Hub on push to main branch
+
 
 <br>
 
 ## What's Pending
 
-- [ ] CI/CD pipeline — auto push Docker images to Docker Hub on push to main branch
 - [ ] RabbitMQ — async messaging between services
 - [ ] User Service + OAuth2 — authentication and authorization
 
@@ -76,4 +77,4 @@ A microservices-based Quiz Application built with Spring Boot, containerized wit
 [![LinkedIn](https://skillicons.dev/icons?i=linkedin)](https://www.linkedin.com/in/moneshgomo)
 [![Docker](https://skillicons.dev/icons?i=docker)](https://hub.docker.com/u/moneshgomo)
 
-**Last Updated:** 17-03-2026
+**Last Updated:** 11-04-2026
