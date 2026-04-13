@@ -4,7 +4,6 @@ import com.quizservice.dao.QuizDao;
 import com.quizservice.feign.QuizInterface;
 import com.quizservice.model.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,15 +17,15 @@ import java.util.Random;
 @Service
 public class QuizService {
 
-    @Autowired
-    QuizDao quizDao;
+    
+    private final QuizDao quizDao;
+    private final QuizInterface quizInterface;
 
-
-   private final QuizInterface quizInterface;
-
-    public QuizService(QuizInterface quizInterface) {
+    public QuizService(QuizDao quizDao, QuizInterface quizInterface) {
+        this.quizDao = quizDao;
         this.quizInterface = quizInterface;
     }
+
 
     private  final String CODE_PATTERNS =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -89,6 +88,9 @@ public class QuizService {
 
         return new ResponseEntity<>("Public quiz created with id: " + savedQuiz.getId(), HttpStatus.CREATED);
     }
+
+
+
     private String generateQuestionCode(String alterQuestionCodeToQuizCode ) {
 
         String timePart = LocalDateTime.now()
@@ -102,6 +104,9 @@ public class QuizService {
 
         return "quiz_"+timePart + randomPart.toString();
     }
+
+
+    
     public ResponseEntity<List<QuestionWrapper>> getQuizQuestions(Integer id) {
         Quiz quiz = quizDao.findById(id).get();
         List<Integer> questionIds = quiz.getQuestionIds(); // list of questions ID
