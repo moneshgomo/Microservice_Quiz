@@ -7,11 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 @Slf4j
 @Service
@@ -20,19 +17,15 @@ public class QuizService {
     
     private final QuizDao quizDao;
     private final QuizInterface quizInterface;
+    private final QuizCodeGenerator generator;
 
-    public QuizService(QuizDao quizDao, QuizInterface quizInterface) {
-        this.quizDao = quizDao;
+
+      public QuizService(QuizInterface quizInterface, QuizDao quizDao, QuizCodeGenerator generator) {
         this.quizInterface = quizInterface;
+        this.quizDao = quizDao;
+        this.generator = generator;
     }
 
-
-    private  final String CODE_PATTERNS =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-    private static final int RANDOM_LENGTH = 10;
-
-    private final Random random = new Random();
 
 
 
@@ -53,16 +46,14 @@ public class QuizService {
 
     public ResponseEntity<String> createPrivateQuiz(QuizCreateRequestWith_CODE quizCreateRequestWithCode) {
 
-
-
-        System.out.println("createQuiz method triggered");
         log.info("Full request: {}", quizCreateRequestWithCode);
         List<Integer> questions = quizInterface.getQuestionsBasedOnQuestionCode(quizCreateRequestWithCode.QUIZ_GENERATOR_CODE()).getBody();
         Quiz quiz = new Quiz();
 
         quiz.setTitle(quizCreateRequestWithCode.title());
         String alterQuestionCodeToQuizCode = quizCreateRequestWithCode.QUIZ_GENERATOR_CODE();
-        String QUIZ_CODE = generateQuestionCode(alterQuestionCodeToQuizCode);
+        String QUIZ_CODE = generator.generate(alterQuestionCodeToQuizCode);
+
         quiz.setQuizCode(QUIZ_CODE);
         quiz.setQuestionIds(questions);
 
@@ -90,20 +81,6 @@ public class QuizService {
     }
 
 
-
-    private String generateQuestionCode(String alterQuestionCodeToQuizCode ) {
-
-        String timePart = LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("HHmmss"));
-
-        StringBuilder randomPart = new StringBuilder();
-        for (int i = 0; i < RANDOM_LENGTH; i++) {
-            int index = random.nextInt(CODE_PATTERNS.length());
-            randomPart.append(CODE_PATTERNS.charAt(index));
-        }
-
-        return "quiz_"+timePart + randomPart.toString();
-    }
 
 
     
