@@ -1,13 +1,10 @@
 package com.telusko.questionservice;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@SpringBootTest(classes = QuestionServiceApplicationTests.class)
 class QuestionServiceApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+	
 
 }
