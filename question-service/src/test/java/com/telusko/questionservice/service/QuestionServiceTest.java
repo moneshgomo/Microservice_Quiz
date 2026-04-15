@@ -51,7 +51,7 @@ public class QuestionServiceTest {
     }
 
     @Test
-void testAddQuestion() {
+    void testAddQuestion() {
 
     var q1 = new Question();
     var q2 = new Question();
