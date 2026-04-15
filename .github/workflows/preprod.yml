@@ -24,12 +24,12 @@ jobs:
       - name: Test Question Service
         run: |
           cd question-service
-          mvn clean test
+          ./mvnw clean test
 
       - name: Test Quiz Service
         run: |
           cd quiz-service
-          mvn clean test
+          ./mvnw clean test
 
 
   promote:

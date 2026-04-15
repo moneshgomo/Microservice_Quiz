@@ -1,4 +1,4 @@
-package com.questionservice.exception;
+package com.telusko.questionservice.exception;
 
 import java.time.LocalDateTime;
 
