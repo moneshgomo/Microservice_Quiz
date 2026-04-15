@@ -1,11 +1,6 @@
 package com.telusko.questionservice.service;
 
 
-import com.questionservice.dao.QuestionDao;
-import com.questionservice.model.Question;
-import com.questionservice.service.QuestionCodeGenerator;
-import com.questionservice.service.QuestionService;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -14,6 +9,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.http.HttpStatus;
+
+import com.telusko.questionservice.dao.QuestionDao;
+import com.telusko.questionservice.model.Question;
+
 
 import java.util.List;
 

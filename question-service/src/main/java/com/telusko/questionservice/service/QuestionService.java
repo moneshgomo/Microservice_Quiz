@@ -1,14 +1,15 @@
-package com.questionservice.service;
+package com.telusko.questionservice.service;
 
 
-import com.questionservice.dao.QuestionDao;
-import com.questionservice.model.Question;
-import com.questionservice.model.QuestionWrapper;
-import com.questionservice.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.telusko.questionservice.dao.QuestionDao;
+import com.telusko.questionservice.model.Question;
+import com.telusko.questionservice.model.QuestionWrapper;
+import com.telusko.questionservice.model.Response;
 
 import java.util.ArrayList;
 import java.util.List;

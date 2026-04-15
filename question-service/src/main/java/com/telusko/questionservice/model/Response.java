@@ -1,4 +1,4 @@
-package com.questionservice.model;
+package com.telusko.questionservice.model;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
