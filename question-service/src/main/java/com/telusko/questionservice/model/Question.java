@@ -1,4 +1,4 @@
-package com.questionservice.model;
+package com.telusko.questionservice.model;
 
 import jakarta.persistence.*;
 import lombok.Data;

@@ -1,10 +1,5 @@
-package com.questionservice.controller;
+package com.telusko.questionservice.controller;
 
-
-import com.questionservice.model.Question;
-import com.questionservice.model.QuestionWrapper;
-import com.questionservice.model.Response;
-import com.questionservice.service.QuestionService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +8,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.telusko.questionservice.model.Question;
+import com.telusko.questionservice.model.QuestionWrapper;
+import com.telusko.questionservice.model.Response;
+import com.telusko.questionservice.service.QuestionService;
 
 import java.util.List;
 

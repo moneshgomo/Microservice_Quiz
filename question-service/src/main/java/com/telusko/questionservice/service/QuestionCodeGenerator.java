@@ -1,4 +1,4 @@
-package com.questionservice.service;
+package com.telusko.questionservice.service;
 
 import org.springframework.stereotype.Component;
 
