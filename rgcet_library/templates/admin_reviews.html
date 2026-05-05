@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Reviews – RGCET Library{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold mb-4">Book Reviews</h4>
+<div class="row g-3">
+  {% for r in reviews %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <h6 class="fw-bold">{{ r.title }}</h6>
+        <p class="text-muted small mb-1">by {{ r.full_name }}</p>
+        <div class="mb-2">
+          {% for i in range(1, 6) %}
+            <span style="color:{% if i <= r.rating %}#f5a623{% else %}#ccc{% endif %}">★</span>
+          {% endfor %}
+          <span class="ms-1 small text-muted">{{ r.rating }}/5</span>
+        </div>
+        <p class="small">{{ r.review_text or 'No comment.' }}</p>
+        <p class="text-muted x-small">{{ r.created_at[:10] }}</p>
+      </div>
+      <div class="card-footer bg-white border-0 pt-0">
+        <form method="post" action="{{ url_for('delete_review', review_id=r.id) }}"
+              onsubmit="return confirm('Delete this review?')">
+          <button class="btn btn-sm btn-outline-danger">
+            <i class="bi bi-trash me-1"></i>Delete
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <p class="text-muted">No reviews yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

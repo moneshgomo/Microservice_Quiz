@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – RGCET Library{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold mb-4">Admin Dashboard</h4>
+
+<!-- Stat cards -->
+<div class="row g-3 mb-4">
+  {% set cards = [
+    ("total_books",    "Total Books",       "bi-journals",      "primary"),
+    ("total_members",  "Active Members",    "bi-people-fill",   "success"),
+    ("issued",         "Books Issued",      "bi-arrow-left-right","warning"),
+    ("overdue",        "Overdue",           "bi-exclamation-triangle","danger"),
+    ("pending_users",  "Pending Users",     "bi-person-plus",   "info"),
+    ("pending_requests","Book Requests",    "bi-inbox-fill",    "secondary"),
+  ] %}
+  {% for key, label, icon, color in cards %}
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="card stat-card p-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="icon bg-{{ color }} bg-opacity-10 text-{{ color }}">
+          <i class="bi {{ icon }}"></i>
+        </div>
+        <div>
+          <div class="fs-4 fw-bold">{{ stats[key] }}</div>
+          <div class="small text-muted">{{ label }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Recent Transactions -->
+<div class="card">
+  <div class="card-header bg-white fw-semibold">Recent Transactions</div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>#</th><th>Member</th><th>Book</th><th>Issue Date</th><th>Due Date</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for tx in recent_tx %}
+          <tr>
+            <td>{{ tx.id }}</td>
+            <td>{{ tx.full_name }}</td>
+            <td>{{ tx.title }}</td>
+            <td>{{ tx.issue_date[:10] }}</td>
+            <td>{{ tx.due_date[:10] }}</td>
+            <td>
+              {% if tx.status == 'returned' %}
+                <span class="badge bg-success">Returned</span>
+              {% elif tx.due_date < now_str %}
+                <span class="badge bg-danger">Overdue</span>
+              {% else %}
+                <span class="badge bg-warning text-dark">Issued</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6" class="text-center text-muted py-3">No transactions yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const nowStr = new Date().toISOString().slice(0,19).replace('T',' ');
+  document.querySelectorAll('td:nth-child(6) span').forEach(el => {
+    // status badges are already server-rendered; nothing extra needed
+  });
+</script>
+{% endblock %}

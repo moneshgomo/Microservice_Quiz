@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}{{ member.full_name }} – RGCET Library{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4 gap-3">
+  <a href="{{ url_for('members') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i></a>
+  <h4 class="fw-bold mb-0">Member Profile</h4>
+</div>
+
+<div class="row g-4">
+  <!-- Profile card -->
+  <div class="col-md-4">
+    <div class="card p-4 text-center">
+      <div style="font-size:4rem">👤</div>
+      <h5 class="fw-bold mt-2">{{ member.full_name }}</h5>
+      <p class="text-muted mb-1">@{{ member.username }}</p>
+      <p class="text-muted small mb-2">{{ member.email }}</p>
+      <span class="badge bg-secondary">{{ member.role }}</span>
+      <hr/>
+      <small class="text-muted">Joined {{ member.created_at[:10] }}</small>
+    </div>
+
+    <!-- Badges -->
+    <div class="card mt-3 p-3">
+      <h6 class="fw-semibold mb-2"><i class="bi bi-award me-1"></i>Badges</h6>
+      {% if badges %}
+        <div class="d-flex flex-wrap gap-2">
+          {% for b in badges %}
+          <span class="badge bg-warning text-dark">🏅 {{ b.badge_name }}</span>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-muted small mb-0">No badges yet.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Borrow history -->
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header bg-white fw-semibold">Borrow History</div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr><th>Book</th><th>Issued</th><th>Due</th><th>Returned</th><th>Fine</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              {% for tx in history %}
+              <tr>
+                <td>{{ tx.title }}</td>
+                <td>{{ tx.issue_date[:10] }}</td>
+                <td>{{ tx.due_date[:10] }}</td>
+                <td>{{ tx.return_date[:10] if tx.return_date else '—' }}</td>
+                <td>{% if tx.fine > 0 %}₹{{ tx.fine }}{% else %}—{% endif %}</td>
+                <td>
+                  {% if tx.status == 'returned' %}
+                    <span class="badge bg-success">Returned</span>
+                  {% else %}
+                    <span class="badge bg-warning text-dark">Issued</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% else %}
+              <tr><td colspan="6" class="text-center text-muted py-3">No borrow history.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
