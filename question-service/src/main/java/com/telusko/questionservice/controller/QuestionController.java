@@ -17,7 +17,7 @@ import com.telusko.questionservice.service.QuestionService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/question")  // NEED TO UPDATE THE ENDPOINTS BASED ON OPEN API SPECS
+@RequestMapping("/question")  
 public class QuestionController {
 
     @Autowired

@@ -11,10 +11,10 @@ export default function Navbar() {
                 </Link>
 
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                    <a href="https://github.com/moneshgomo" target="_blank" rel="noopener noreferrer" className="nav-icon-btn" title="GitHub">
+                    <a href="https://github.com/kubernetes/kubernetes" target="_blank" rel="noopener noreferrer" className="nav-icon-btn" title="GitHub">
                         <Github size={40} />
                     </a>
-                    <a href="https://moneshgomo.netlify.app" target="_blank" rel="noopener noreferrer" className="nav-icon-btn" title="Portfolio">
+                    <a href="https://kubernetes.io" target="_blank" rel="noopener noreferrer" className="nav-icon-btn" title="Portfolio">
                         <Globe size={40} />
                     </a>
                 </div>
